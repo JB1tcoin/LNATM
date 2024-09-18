@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Lightning ATM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Bitcoin Lightning ATM</h1>
+
+    <!-- Start-Bildschirm -->
+    <div id="start-screen">
+        <button id="start-button">Münzzählen starten</button>
+    </div>
+
+    <!-- Münz-Bildschirm -->
+    <div id="coin-screen" style="display: none;">
+        <h2>Werfen Sie eine Münze ein</h2>
+        <div id="value-display">Gesamtsumme: 0.00 €</div>
+        <div id="satoshi-display">In Satoshis: 0 Sats</div>
+        <button id="cancel-button">Abbrechen</button>
+        <button id="proceed-button">Fortfahren</button>
+    </div>
+
+    <!-- QR-Code-Bildschirm -->
+    <div id="qr-screen" style="display: none;">
+        <h2>LNURL QR-Code</h2>
+        <img id="qr-code" src="" alt="LNURL QR-Code">
+        <button id="back-button">Zurück</button> <!-- Zurück-Button für Abbrechen -->
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
