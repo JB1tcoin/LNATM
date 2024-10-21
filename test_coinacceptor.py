@@ -1,8 +1,10 @@
 import RPi.GPIO as GPIO
 import time
 
-#GPIO-Nummerierung
+# Setze die GPIO-Nummerierung
 GPIO.setmode(GPIO.BCM)
+
+# Definiere den GPIO Pin für den Coin Acceptor
 COIN_ACCEPTOR_PIN = 22
 
 # Setze den Pin als Eingang

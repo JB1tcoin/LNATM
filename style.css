@@ -1,4 +1,4 @@
-body {
+/*body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 50px;
@@ -14,4 +14,238 @@ body {
     padding: 10px 20px;
     margin-top: 20px;
     cursor: pointer;
+}
+
+
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Hide scrollbars */
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    color: #FFFFFF; /* White text */
+}
+
+#background-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    object-fit: cover;
+}
+
+/* Hide all screens by default */
+#coin-screen,
+#qr-screen,
+#success-screen {
+    display: none;
+}
+
+/* Show the active screen */
+#start-screen.active,
+#coin-screen.active,
+#qr-screen.active,
+#success-screen.active {
+    display: flex;
+}
+
+/* Screen Styles */
+#start-screen,
+#coin-screen,
+#qr-screen,
+#success-screen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+
+/* Heading Styles */
+h1, h2 {
+    color: #F7931A;
+    text-shadow: 0 0 10px #F7931A, 0 0 20px #F7931A;
+    margin: 20px;
+}
+
+h1 {
+    font-size: 3em;
+    animation: textGlow 2s infinite alternate;
+}
+
+h2 {
+    font-size: 2.5em;
+}
+
+/* Start Screen Heading */
+#start-screen h1 {
+    margin-top: 100px;
+}
+
+/* Button Styles */
+button {
+    font-size: 1.5em;
+    padding: 20px 40px;
+    margin: 20px;
+    color: black;
+    background-color: #F7931A;
+    border: 2px solid #F7931A;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(247,147,26,0.3) 0%, rgba(0,0,0,0) 70%);
+    animation: particle 5s infinite linear;
+    opacity: 0;
+}
+
+button:hover::before {
+    opacity: 1;
+}
+
+button:hover {
+    background-color: #d67e0d; /* Etwas dunkleres Orange beim Hover */
+    box-shadow: 0 0 10px #F7931A, 0 0 20px #F7931A;
+}
+
+button:disabled,
+#proceed-button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    box-shadow: none;
+    animation: none;
+}
+
+button.glow {
+    box-shadow: 0 0 10px #F7931A, 0 0 20px #F7931A, 0 0 30px #F7931A, 0 0 40px #F7931A;
+    animation: glow 2s infinite alternate;
+}
+
+/* Specific Button Styles */
+#start-button,
+#restart-button,
+#proceed-button.active {
+    box-shadow: 0 0 10px #F7931A, 0 0 20px #F7931A, 0 0 30px #F7931A;
+    animation: glow 2s infinite alternate;
+}
+
+#cancel-button,
+#back-button {
+    font-size: 1.2em;
+    padding: 15px 30px;
+}
+
+/* Display Styles */
+#value-display,
+#satoshi-display {
+    font-size: 1.5em;
+    margin: 10px;
+}
+
+/* QR Code Styles */
+#qr-code {
+    margin: 20px;
+    width: 200px;
+    height: 200px;
+    border: 5px solid #F7931A;
+    border-radius: 10px;
+}
+
+/* Animations */
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px #F7931A, 0 0 20px #F7931A, 0 0 30px #F7931A, 0 0 40px #F7931A;
+    }
+    to {
+        box-shadow: 0 0 20px #F7931A, 0 0 30px #F7931A, 0 0 40px #F7931A, 0 0 50px #F7931A;
+    }
+}
+
+@keyframes textGlow {
+    from {
+        text-shadow: 0 0 10px #F7931A, 0 0 20px #F7931A;
+    }
+    to {
+        text-shadow: 0 0 20px #F7931A, 0 0 30px #F7931A;
+    }
+}
+
+@keyframes particle {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Transition Animations */
+.screen-transition {
+    animation: screenTransition 1s forwards;
+}
+
+@keyframes screenTransition {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+/* Success Screen Animation */
+#success-screen h2 {
+    animation: textAppear 3s ease-in-out;
+}
+
+@keyframes textAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    h1, h2 {
+        font-size: 2em;
+    }
+
+    button {
+        font-size: 1.2em;
+        padding: 15px 25px;
+    }
+
+    #value-display,
+    #satoshi-display {
+        font-size: 1.2em;
+    }
 }

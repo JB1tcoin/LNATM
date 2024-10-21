@@ -1,12 +1,14 @@
 import RPi.GPIO as GPIO
 import time
 
-# GPIO-Nummerierung
+# Setze die GPIO-Nummerierung
 GPIO.setmode(GPIO.BCM)
+
+# Definiere die Pins für die Solenoids
 SOLENOID_1_PIN = 17
 SOLENOID_2_PIN = 27
 
-# Pins als Ausgänge
+# Setze die Pins als Ausgänge
 GPIO.setup(SOLENOID_1_PIN, GPIO.OUT)
 GPIO.setup(SOLENOID_2_PIN, GPIO.OUT)
 

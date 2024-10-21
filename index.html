@@ -7,16 +7,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Bitcoin Lightning ATM</h1>
+
+    <!-- Background Video -->
+    <video id="background-video" autoplay loop muted>
+        <source src="file:///home/atm/backgroundvideo.mp4" type="video/mp4">
+    </video>
+
+
+
 
     <!-- Start-Bildschirm -->
-    <div id="start-screen">
-        <button id="start-button">Münzzählen starten</button>
+ <div id="start-screen" class="active">
+        <h1>Deine Reise ins Bitcoin Universum!</h1>
+        <button id="start-button">Start</button>
     </div>
-
     <!-- Münz-Bildschirm -->
     <div id="coin-screen" style="display: none;">
-        <h2>Werfen Sie eine Münze ein</h2>
+        <h2>Wie viel Satoshis willst du kaufen?</h2>
         <div id="value-display">Gesamtsumme: 0.00 €</div>
         <div id="satoshi-display">In Satoshis: 0 Sats</div>
         <button id="cancel-button">Abbrechen</button>
@@ -25,11 +32,16 @@
 
     <!-- QR-Code-Bildschirm -->
     <div id="qr-screen" style="display: none;">
-        <h2>LNURL QR-Code</h2>
+        <h2>Scanne den QR-Code mit deiner Ln-Wallet</h2>
         <img id="qr-code" src="" alt="LNURL QR-Code">
-        <button id="back-button">Zurück</button> <!-- Zurück-Button für Abbrechen -->
+        <button id="back-button">Abbrechen</button> <!-- Zurück-Button für Abbrechen -->
     </div>
 
+    <!-- Success-Bildschrim -->
+
+    <div id="success-screen" style="display: none;">
+        <h2>Willkommen im Bitcoin Universum!<h2>
+        <button id="restart-button">Ich will mehr!</button> 
     <script src="renderer.js"></script>
 </body>
 </html>

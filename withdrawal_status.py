@@ -1,12 +1,3 @@
-#
-#
-# Sollte eigentlich unnötig sein, da withdrawal status im frontend verankert.
-#
-#
-#
-
-
-
 import RPi.GPIO as GPIO
 import time
 import requests

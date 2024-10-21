@@ -12,24 +12,19 @@ const qrScreen = document.getElementById('qr-screen');
 const valueDisplay = document.getElementById('value-display');
 const satoshiDisplay = document.getElementById('satoshi-display');
 const qrCode = document.getElementById('qr-code');
-const successMessage = document.createElement('div');  
-const restartButton = document.createElement('button');
+const successScreen= document.getElementById('success-screen');
+const restartButton = document.getElementById('restart-button');
 
-// Erfolgsnachricht und Button-Styling
-successMessage.style.display = 'none';
-successMessage.textContent = 'Erfolg! Auszahlung abgeschlossen.';
-successMessage.style.fontSize = '2em';
-successMessage.style.color = 'orange';
-qrScreen.appendChild(successMessage);
 
-restartButton.style.display = 'none';
-restartButton.textContent = 'Neu starten';
-restartButton.addEventListener('click', () => {
-    console.log("Neu starten-Button gedrückt");
-    qrScreen.style.display = 'none';
-    startScreen.style.display = 'block';
-});
-qrScreen.appendChild(restartButton);
+//restart-button
+//restartButton.style.display = 'none';
+//restartButton.textContent = 'Neu starten';
+//restartButton.addEventListener('click', () => {
+  //  console.log("Neu starten-Button gedrückt");
+  //  qrScreen.style.display = 'none';
+  //  startScreen.style.display = 'block';
+//});
+//qrScreen.appendChild(restartButton);
 
 let currentEuroValue = 0;
 let currentBtcToEur = 0;
@@ -37,7 +32,7 @@ let lnurlId = '';
 let lnurlCheckInterval;
 let qrCheckTimeout;
 
-// Start-Button
+// Start-Button-Klick-Event hinzufügen
 startButton.addEventListener('click', () => {
     console.log("Start-Button gedrückt");
     startScreen.style.display = 'none';
@@ -46,7 +41,7 @@ startButton.addEventListener('click', () => {
     setInterval(fetchBitcoinPrice, 5000);
 });
 
-// Abbrechen-Button-Klick-Event im Münz-Screen
+// Abbrechen-Button-Klick-Event im Münz-Bildschirm
 cancelButton.addEventListener('click', () => {
     console.log("Abbrechen-Button gedrückt");
     startScreen.style.display = 'block';
@@ -54,14 +49,13 @@ cancelButton.addEventListener('click', () => {
     ipcRenderer.send('activate-solenoids');
 });
 
-// Fortfahren-Button
+// Fortfahren-Button-Klick-Event
 proceedButton.addEventListener('click', () => {
     // Erfolgsnachricht und QR-Code zurücksetzen
-    successMessage.style.display = 'none';
     qrCode.src = '';  // QR-Code zurücksetzen
-    restartButton.style.display = 'none';
     backButton.style.display = 'block';
 
+    // Stelle sicher, dass eine neue LNURL erstellt wird
     const satoshis = Math.round((currentEuroValue / currentBtcToEur) * 100000000);
 
     // QR-Code-Bildschirm anzeigen, nachdem eine neue LNURL erstellt wird
@@ -72,8 +66,19 @@ proceedButton.addEventListener('click', () => {
     valueDisplay.textContent = `Gesamtsumme: 0.00 €`;
     satoshiDisplay.textContent = `In Satoshis: 0 Sats`;
 });
+   //Fortfahren button aktiviert sobald geld eingeschmissen
+function updateProceedButtonState() {
+    if (currentEuroValue >= 0.05) {
+        proceedButton.disabled = false;
+        proceedButton.classList.add('glow'); // Add glowing effect
+    } else {
+        proceedButton.disabled = true;
+        proceedButton.classList.remove('glow'); // Remove glowing effect
+    }
+}
 
-// LNURL QR-Code anzeigen
+
+// Empfangener LNURL QR-Code anzeigen
 ipcRenderer.on('lnurl-qr', (event, { lnurl, id }) => {
     console.log(`LNURL erhalten: ${lnurl}, ID: ${id}`);
     lnurlId = id;
@@ -81,39 +86,38 @@ ipcRenderer.on('lnurl-qr', (event, { lnurl, id }) => {
     coinScreen.style.display = 'none';
     qrScreen.style.display = 'block';
 
- // Stoppe Überprüfung, falls vorhanden
+ // Stoppe vorhandene Überprüfung, falls vorhanden
     stopLnurlCheck();
 
 
-    // Nach 5 Sekunden mit dem Überprüfen der LNURL beginnen um Abfragen zu sparen
+    // Nach 5 Sekunden mit dem Überprüfen der LNURL beginnen
     console.log("5 Sekunden Timer gestartet für LNURL Überprüfung");
     qrCheckTimeout = setTimeout(() => {
         lnurlCheckInterval = setInterval(() => {
             console.log("LNURL wird überprüft...");
             ipcRenderer.send('check-lnurl-status', { lnurlId: lnurlId });
-        }, 5000);  // Alle 1,5 Sekunden überprüfen (evtl auch noch länger oder kürzer)
-    }, 5000);  // 5 Sekunden Verzögerung (um Abfragen zu sparen)
+        }, 5000);  // Alle 1,5 Sekunden überprüfen
+   }, 1000);  // 5 Sekunden Verzögerung
 });
 
 // Empfangene Bestätigung der LNURL Auszahlung
 ipcRenderer.on('lnurl-success', () => {
     console.log("LNURL Auszahlung bestätigt");
     stopLnurlCheck();  // Abfragen stoppen
-    qrCode.style.display = 'none';  // QR-Code ausblenden
-    successMessage.style.display = 'block';  // Erfolgsnachricht anzeigen
-    restartButton.style.display = 'block';  // Neu starten-Button anzeigen
-    backButton.style.display = 'none';  // Zurück-Button ausblenden
-    ipcRenderer.send('activate-solenoid-17');  // Solenoid 17 aktivieren
+    qrScreen.style.display = 'none';  // QR-Screen ausblenden
+    successScreen.style.display = 'block';
+    //backButton.style.display = 'none';  // Zurück-Button ausblenden
+    ipcRenderer.send('activate-solenoid-17');  // Solenoid an GPIO 17 aktivieren
 });
 
-// Stoppen der LNURL-Abfragen
+// Funktion zum Stoppen der LNURL-Abfragen
 function stopLnurlCheck() {
     console.log("LNURL Überprüfungen gestoppt");
     clearInterval(lnurlCheckInterval);
     clearTimeout(qrCheckTimeout);
 }
 
-// Zurück-Button im QR-Code-Bildschirm
+// Zurück-Button-Klick-Event im QR-Code-Bildschirm
 backButton.addEventListener('click', () => {
     console.log("Zurück-Button gedrückt");
     stopLnurlCheck();  // LNURL-Abfragen stoppen
@@ -126,15 +130,22 @@ backButton.addEventListener('click', () => {
     satoshiDisplay.textContent = `In Satoshis: 0 Sats`;
 });
 
-// Coindaten anzeigen
+// Empfangene Münzdaten anzeigen
 ipcRenderer.on('coin-value', (event, coinData) => {
     console.log(`Münzen erkannt: ${coinData.value} €`);
     currentEuroValue = coinData.value;
     valueDisplay.textContent = `Gesamtsumme: ${coinData.value.toFixed(2)} €`;
     updateSatoshiDisplay();
+    updateProceedButtonState();
 });
 
-// Umrechnung von Euro in Sats
+// Disable proceed button on load
+window.onload = () => {
+    proceedButton.disabled = true;
+    proceedButton.classList.remove('glow');
+};
+
+// Funktion zur Umrechnung von Euro in Satoshis
 function updateSatoshiDisplay() {
     if (currentBtcToEur > 0) {
         const satoshis = Math.round((currentEuroValue / currentBtcToEur) * 100000000);
@@ -146,7 +157,7 @@ function updateSatoshiDisplay() {
     }
 }
 
-// Abrufen des aktuellen BTC-Preises in Euro
+// Funktion zum Abrufen des aktuellen Bitcoin-Preises in Euro
 function fetchBitcoinPrice() {
     console.log("Bitcoin-Kurs wird abgerufen...");
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur')
@@ -160,23 +171,22 @@ function fetchBitcoinPrice() {
             console.error('Fehler beim Abrufen des Bitcoin-Kurses:', error);
         });
 }
-// Neu starten-Button
+// Neu starten-Button-Klick-Event hinzufügen
 restartButton.addEventListener('click', () => {
     stopLnurlCheck();  // Stoppe die LNURL-Überprüfung, falls sie noch läuft
     qrScreen.style.display = 'none';
+    successScreen.style.display = 'none'; 
     startScreen.style.display = 'block';
-    
-    // Coin-Counter auf 0 setzen
+
+    // Münz-Counter auf 0 setzen
     currentEuroValue = 0;
     valueDisplay.textContent = `Gesamtsumme: 0.00 €`;
     satoshiDisplay.textContent = `In Satoshis: 0 Sats`;
 
     // LNURL und QR-Code zurücksetzen
-    lnurlId = '';  // Lösche alte LNURL ID
-    qrCode.src = '';  // Lösche alten QR-Code
-    successMessage.style.display = 'none';  // Erfolgsnachricht ausblenden
-    restartButton.style.display = 'none';  // Neu starten-Button ausblenden
-    backButton.style.display = 'block';  // Zurück-Button wieder anzeigen
+    lnurlId = '';  // Lösche die alte LNURL ID
+    qrCode.src = '';  // Lösche den alten QR-Code
+    //backButton.style.display = 'block';  // Zurück-Button wieder anzeigen
 
-    ipcRenderer.send('reset-coin-counter');  // Coin-Counter zurücksetzen
+    ipcRenderer.send('reset-coin-counter');  // Münz-Counter zurücksetzen
 });

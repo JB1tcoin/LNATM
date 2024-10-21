@@ -20,9 +20,9 @@ def check_withdrawal_claimed(link_id):
         return False
 
 if __name__ == "__main__":
-    link_id = sys.argv[1]  # ID des Links aus den Argumenten
-    print(f"Received link_id: {link_id}")  # Gebe die link_id aus zum checcken ob korrekt
-    sys.stdout.flush()  # ausgabe instant
+    link_id = sys.argv[1]  # ID des Links aus den Argumenten erhalten
+    print(f"Received link_id: {link_id}")  # Gebe die link_id aus, um sicherzustellen, dass sie korrekt ist
+    sys.stdout.flush()  # Stelle sicher, dass die Ausgabe sofort erfolgt
 
     while True:
         if check_withdrawal_claimed(link_id):
@@ -31,4 +31,4 @@ if __name__ == "__main__":
             break
         else:
             print("not claimed")
-        time.sleep(0.5)  # Warte 0,5sek, bevor erneut geprüft wird
+        time.sleep(0.5)  # Warte 0,5 Sekunden, bevor erneut geprüft wird
